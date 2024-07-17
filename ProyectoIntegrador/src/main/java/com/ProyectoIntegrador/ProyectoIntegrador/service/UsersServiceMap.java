@@ -1,7 +1,6 @@
 package com.ProyectoIntegrador.ProyectoIntegrador.service;
 
 import com.ProyectoIntegrador.ProyectoIntegrador.exception.UserNotFoundException;
-import com.ProyectoIntegrador.ProyectoIntegrador.repository.User;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

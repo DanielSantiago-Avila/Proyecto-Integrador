@@ -1,5 +1,4 @@
 package com.ProyectoIntegrador.ProyectoIntegrador.service;
-import com.ProyectoIntegrador.ProyectoIntegrador.repository.User;
 
 import java.util.List;
 import java.util.Optional;

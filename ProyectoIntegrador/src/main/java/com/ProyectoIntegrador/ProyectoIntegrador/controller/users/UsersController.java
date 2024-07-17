@@ -2,7 +2,6 @@ package com.ProyectoIntegrador.ProyectoIntegrador.controller.users;
 
 import com.ProyectoIntegrador.ProyectoIntegrador.dto.UserDto;
 import com.ProyectoIntegrador.ProyectoIntegrador.exception.UserNotFoundException;
-import com.ProyectoIntegrador.ProyectoIntegrador.repository.User;
 import com.ProyectoIntegrador.ProyectoIntegrador.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
