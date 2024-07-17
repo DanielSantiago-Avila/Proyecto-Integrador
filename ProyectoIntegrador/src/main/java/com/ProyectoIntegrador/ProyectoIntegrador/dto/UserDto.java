@@ -2,45 +2,38 @@ package com.ProyectoIntegrador.ProyectoIntegrador.dto;
 
 public class UserDto {
     private String id;
-    private final String name;
-    private final String lastName;
-    private final String email;
-    private final String password;
+    private String name;
+    private String email;
 
-    public UserDto() {
-        this.name = "";
-        this.lastName = "";
-        this.email = "";
-        this.password = "";
+    public UserDto() {}
+
+    public UserDto(String id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
     }
 
-    public UserDto(String name, String lastName, String email, String password) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
+    public String getId() {
+        return id;
     }
 
-    public UserDto(String name, String lastName, String email) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = "";
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getPassword() {
-        return password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -1,6 +1,10 @@
 package com.ProyectoIntegrador.ProyectoIntegrador.service;
 
+import com.ProyectoIntegrador.ProyectoIntegrador.dto.UserDto;
+import com.ProyectoIntegrador.ProyectoIntegrador.entity.UserMongoEntity;
 import com.ProyectoIntegrador.ProyectoIntegrador.exception.UserNotFoundException;
+import com.ProyectoIntegrador.ProyectoIntegrador.repository.UserMongoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -8,38 +12,54 @@ import java.util.*;
 @Service
 public class UsersServiceMap implements UsersService {
 
-    private final Map<String, User> usersMap = new HashMap<>();
+    @Autowired
+    private UserMongoRepository userMongoRepository;
 
     @Override
-    public User save(User user) {
-        if (user.getId() == null) {
-            user.setId(UUID.randomUUID().toString());
+    public List<UserDto> all() {
+        return this.userMongoRepository.findAll().stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    public Optional<UserDto> findById(String id) {
+        return this.userMongoRepository.findById(id)
+                .map(this::toDto);
+    }
+
+    @Override
+    public UserDto save(UserDto user) {
+        UserMongoEntity entity = new UserMongoEntity();
+        entity.setName(user.getName());
+        entity.setEmail(user.getEmail());
+        UserMongoEntity entitySaved = this.userMongoRepository.save(entity);
+        return this.toDto(entitySaved);
+    }
+
+    @Override
+    public UserDto update(UserDto user, String id) {
+        UserMongoEntity entity = this.userMongoRepository.findById(id)
+                .orElse(null);
+        if (entity != null) {
+            entity.setName(user.getName());
+            entity.setEmail(user.getEmail());
+            UserMongoEntity entitySaved = this.userMongoRepository.save(entity);
+            return this.toDto(entitySaved);
         }
-        usersMap.put(user.getId(), user);
-        return user;
-    }
-
-    @Override
-    public Optional<User> findById(String id) {
-        return Optional.ofNullable(usersMap.get(id));
-    }
-
-    @Override
-    public List<User> all() {
-        return new ArrayList<>(usersMap.values());
+        return null;
     }
 
     @Override
     public void deleteById(String id) {
-        usersMap.remove(id);
+        UserMongoEntity entity = this.userMongoRepository.findById(id)
+                .orElse(null);
+        if (entity != null) {
+            this.userMongoRepository.delete(entity);
+        }
     }
 
-    @Override
-    public User update(User user, String userId) {
-        if (!usersMap.containsKey(userId)) {
-            throw new UserNotFoundException(userId);
-        }
-        user.setId(userId);  // Asegúrate de que el ID es correcto para la actualización
-        return save(user);
+    private UserDto toDto(UserMongoEntity entity) {
+        return new UserDto(entity.getId(), entity.getName(), entity.getEmail());
     }
 }
