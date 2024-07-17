@@ -24,8 +24,9 @@ public class UsersServiceMap implements UsersService {
 
     @Override
     public Optional<UserDto> findById(String id) {
-        return this.userMongoRepository.findById(id)
-                .map(this::toDto);
+        UserMongoEntity entity = this.userMongoRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        return Optional.of(toDto(entity));
     }
 
     @Override
@@ -40,23 +41,18 @@ public class UsersServiceMap implements UsersService {
     @Override
     public UserDto update(UserDto user, String id) {
         UserMongoEntity entity = this.userMongoRepository.findById(id)
-                .orElse(null);
-        if (entity != null) {
-            entity.setName(user.getName());
-            entity.setEmail(user.getEmail());
-            UserMongoEntity entitySaved = this.userMongoRepository.save(entity);
-            return this.toDto(entitySaved);
-        }
-        return null;
+                .orElseThrow(() -> new UserNotFoundException(id));
+        entity.setName(user.getName());
+        entity.setEmail(user.getEmail());
+        UserMongoEntity entitySaved = this.userMongoRepository.save(entity);
+        return this.toDto(entitySaved);
     }
 
     @Override
     public void deleteById(String id) {
         UserMongoEntity entity = this.userMongoRepository.findById(id)
-                .orElse(null);
-        if (entity != null) {
-            this.userMongoRepository.delete(entity);
-        }
+                .orElseThrow(() -> new UserNotFoundException(id));
+        this.userMongoRepository.delete(entity);
     }
 
     private UserDto toDto(UserMongoEntity entity) {
