@@ -3,6 +3,7 @@ package com.ProyectoIntegrador.ProyectoIntegrador.controller.users;
 import com.ProyectoIntegrador.ProyectoIntegrador.dto.UserDto;
 import com.ProyectoIntegrador.ProyectoIntegrador.exception.UserNotFoundException;
 import com.ProyectoIntegrador.ProyectoIntegrador.service.UsersService;
+import com.ProyectoIntegrador.ProyectoIntegrador.service.UsersServiceMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
