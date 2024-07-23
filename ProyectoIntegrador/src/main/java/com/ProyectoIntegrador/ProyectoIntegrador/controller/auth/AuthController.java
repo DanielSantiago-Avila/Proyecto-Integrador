@@ -6,6 +6,7 @@ import com.ProyectoIntegrador.ProyectoIntegrador.dto.auth.LoginDto;
 import com.ProyectoIntegrador.ProyectoIntegrador.dto.auth.RegisterDto;
 import com.ProyectoIntegrador.ProyectoIntegrador.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,16 +20,29 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping(value = "login")
-    public ResponseEntity<AuthDto> Login(@RequestBody LoginDto login){
-        AuthDto authDto = this.authService.login(login);
-        return ResponseEntity.ok(authDto);
+    @PostMapping("/login")
+    public ResponseEntity<AuthDto> Login(@RequestBody LoginDto loginDto) {
+        try {
+            AuthDto authDto = authService.login(loginDto);
+            if (authDto == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            return ResponseEntity.ok(authDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthDto> register(@RequestBody RegisterDto dto){
-        AuthDto authDto = this.authService.register(dto);
-        return ResponseEntity.ok(authDto);
+    public ResponseEntity<AuthDto> register(@RequestBody RegisterDto registerDto) {
+        try {
+            AuthDto authDto = authService.register(registerDto);
+            return ResponseEntity.ok(authDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

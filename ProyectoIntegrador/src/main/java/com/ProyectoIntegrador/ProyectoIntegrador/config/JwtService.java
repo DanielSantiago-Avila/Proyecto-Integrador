@@ -39,19 +39,39 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
     public String getUsernameFromToken(String token) {
-        return getClaim(token, Claims::getSubject);
+        try {
+            return getClaim(token, Claims::getSubject);
+        } catch (Exception e) {
+            return null;
+        }
+
+
     }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+
+        try {
+            final String username = getUsernameFromToken(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        } catch (Exception e) {
+            return false;
+        }
+
     }
-    private Claims getAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+    public Claims getAllClaims(String token) {
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            return null;
+        }
+
+
+
     }
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaims(token);
